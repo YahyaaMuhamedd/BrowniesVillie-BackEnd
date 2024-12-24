@@ -1,10 +1,25 @@
 let data = require("../data/products");
 const ProductSchema = require("../models/product.model");
+const { buildSearchQuery } = require("./SearchQuery");
+
+// const getProducts = async (req, res) => {
+//     const Products = await ProductSchema.find();
+//     res.json(Products);
+// }
 
 const getProducts = async (req, res) => {
-    const Products = await ProductSchema.find();
-    res.json(Products);
-}
+    try {
+        const { search } = req.query; // Extract search query parameter
+        const query = buildSearchQuery(search); // Build a search query
+
+        const products = await ProductSchema.find(query); // Fetch products from MongoDB
+        res.json(products); // Return the fetched products as JSON
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch products" });
+    }
+};
+
 
 const getProductById = async (req, res) => {
     try {
