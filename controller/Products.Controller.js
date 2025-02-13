@@ -1,18 +1,15 @@
-let data = require("../data/products");
+const { buildSearchQuery } = require("../middleware/SearchQuery");
 const ProductSchema = require("../models/product.model");
-const { buildSearchQuery } = require("./SearchQuery");
-
-// const getProducts = async (req, res) => {
-//     const Products = await ProductSchema.find();
-//     res.json(Products);
-// }
 
 const getProducts = async (req, res) => {
     try {
-        const { search } = req.query; // Extract search query parameter
-        const query = buildSearchQuery(search); // Build a search query
+        const Query = req.query; // Extract search query parameter
+        const page = Query.page || 1; // Default to page 1 if not provided
+        const limit = Query.limit || 2; // Default to 10 items per page if not provided
+        const skip = (page - 1) * 2
+        const SearchQuery = buildSearchQuery(Query.search); // Build a search query
 
-        const products = await ProductSchema.find(query); // Fetch products from MongoDB
+        const products = await ProductSchema.find(SearchQuery, { "__v": false }).limit(limit).skip(skip); // Fetch products from MongoDB
         res.json({ status: "success", data: products }); // Return the fetched products as JSON
     } catch (err) {
         console.error(err);
@@ -22,7 +19,7 @@ const getProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
-        const product = await ProductSchema.findById(req.params.id)
+        const product = await ProductSchema.findById(req.params.id, { "__v": false });
 
         if (!product) {
             return res.status(404).json({ ErrorMessage: 'Product not found' });

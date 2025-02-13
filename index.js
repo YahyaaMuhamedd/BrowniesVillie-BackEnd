@@ -1,8 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors")
-const productsRoute = require("./routes/products.route");
-const { MongoClient, ServerApiVersion } = require('mongodb');
 const mongoose = require("mongoose");
+const productsRoute = require("./routes/products.route");
+const usersRoute = require("./routes/user.route");
+
 
 const app = express();
 const port = 3000;
@@ -10,6 +12,7 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 app.use("/api/products", productsRoute);
+app.use("/api/users", usersRoute);
 
 
 app.listen(port, () => {
@@ -17,7 +20,7 @@ app.listen(port, () => {
 })
 
 
-const uri = "mongodb+srv://YahyaMohamed:yahya123@browniesvillie.dqt0u.mongodb.net/browniesvillie?retryWrites=true&w=majority&appName=BrowniesVillie";
+const uri = process.env.MONGODB_URL;
 
 
 mongoose.connect(uri).then(() => {
