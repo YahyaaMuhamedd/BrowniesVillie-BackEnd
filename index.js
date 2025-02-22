@@ -22,13 +22,14 @@ app.listen(port, () => {
 })
 
 
-const uri = process.env.MONGODB_URL;
-
+const uri = "mongodb+srv://YahyaMohamed:yahya123@browniesvillie.dqt0u.mongodb.net/?retryWrites=true&w=majority&appName=BrowniesVillie"
 
 mongoose.connect(uri).then(() => {
-    console.log("Connected to Mongoose");
-})
+    console.log('connected to mongodb');
 
+}).catch((err) => {
+    console.log(err);
+})
 
 
 // const client = new MongoClient(uri, {
