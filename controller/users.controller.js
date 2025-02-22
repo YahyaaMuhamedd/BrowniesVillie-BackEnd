@@ -19,14 +19,14 @@ const getUsers = async (req, res) => {
 };
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password, phone } = req.body;
+        const { name, email, phone } = req.body;
 
         const existingUser = await UserSchema.findOne({ phone });
         if (existingUser) {
             return Error(res, 400, "Phone Already Exists");
         }
 
-        const newUser = new UserSchema({ name, email, password, phone });
+        const newUser = new UserSchema({ name, email, phone });
         await newUser.save();
 
         return res.json({ status: "success", data: newUser });
@@ -38,13 +38,13 @@ const registerUser = async (req, res) => {
 const loginUser = (req, res) => {
     try {
 
-        const { email, password } = req.body;
-        const loginUser = UserSchema.findOne({ email, password });
+        const { email, phone } = req.body;
+        const loginUser = UserSchema.findOne({ email, phone });
 
 
 
         if (!loginUser) {
-            return Error(res, 404, "Invalid Email or Password");
+            return Error(res, 404, "Invalid Email or Phone Number");
         }
 
         return res.json({ status: "success", data: loginUser });
@@ -54,8 +54,9 @@ const loginUser = (req, res) => {
     }
 }
 
+
 module.exports = {
     getUsers,
     registerUser,
-    loginUser
+    loginUser,
 };

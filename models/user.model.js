@@ -10,11 +10,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    password: {
-        type: String,
-        required: true,
-        validate: [validator.isAlphanumeric, 'Password must be at least 8 characters long and contain only letters and numbers'],
-    },
     phone: {
         type: String,
         required: true,

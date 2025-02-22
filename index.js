@@ -4,6 +4,7 @@ const cors = require("cors")
 const mongoose = require("mongoose");
 const productsRoute = require("./routes/products.route");
 const usersRoute = require("./routes/user.route");
+const ordersRoute = require("./routes/orders.route");
 
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/api/products", productsRoute);
 app.use("/api/users", usersRoute);
+app.use("/api/orders", ordersRoute);
 
 
 app.listen(port, () => {
@@ -26,6 +28,7 @@ const uri = process.env.MONGODB_URL;
 mongoose.connect(uri).then(() => {
     console.log("Connected to Mongoose");
 })
+
 
 
 // const client = new MongoClient(uri, {

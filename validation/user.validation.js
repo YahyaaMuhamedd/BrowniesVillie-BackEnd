@@ -11,12 +11,6 @@ const userValidationRules = () => {
         body('email')
             .isEmail()
             .withMessage('email must be a valid email address'),
-        body('password')
-            .isAlphanumeric()
-            .withMessage('password is required')
-            .isLength({ min: 8 })
-            .withMessage('password must be at least 8 characters long')
-            .isLength({ max: 20 }),
         body('phone')
             .isNumeric()
             .withMessage('phone number must be a number')
@@ -32,9 +26,9 @@ const loginUserValidationRules = () => {
         body('email')
             .isEmail()
             .withMessage('email must be a valid email address'),
-        body('password')
+        body('phone')
             .isAlphanumeric()
-            .withMessage('password is required')
+            .withMessage('phone is required')
     ]
 }
 
