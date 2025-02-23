@@ -4,7 +4,8 @@ const buildSearchQuery = (search) => {
 
     return {
         $or: [
-            { title: { $regex: search, $options: "i" } }, // Case-insensitive match on 'name'
+            { title: { $regex: search, $options: "i" } },
+            { name: { $regex: search, $options: "i" } }, // Case-insensitive match on 'name'
             { description: { $regex: search, $options: "i" } }, // Match on 'description'
         ],
     };

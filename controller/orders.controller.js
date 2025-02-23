@@ -1,6 +1,7 @@
 const { Error } = require("../middleware/Error");
 const Order = require("../models/orders.model");
 const User = require("../models/user.model");
+const { buildSearchQuery } = require("../middleware/SearchQuery");
 const generateToken = require("../utils/jwt");
 
 
@@ -17,10 +18,6 @@ const createOrder = async (req, res) => {
 
         if (!user) {
             user = new User({ name, email, phone });
-            await user.save();
-        } else {
-            user.name = name;
-            user.email = email;
             await user.save();
         }
 
@@ -58,12 +55,27 @@ const createOrder = async (req, res) => {
 // 🔒 Get Orders (Requires Authentication)
 const getOrders = async (req, res) => {
     try {
-        const orders = await Order.find({ userId: req.user.userId });
+        const Query = req.query; // Extract search query parameter
+        const page = Query.page || 1; // Default to page 1 if not provided
+        const limit = Query.limit || 2; // Default to 10 items per page if not provided
+        const skip = (page - 1) * 2
+        const SearchQuery = buildSearchQuery(Query.search); // Build a search query
+        const orders = await Order.find({ SearchQuery }, { "__v": false }).limit(limit).skip(skip);
         res.json({ status: "success", data: orders });
     } catch (err) {
         console.error(err);
-        return Error(res, 500, err.message);
+        res.status(500).json({ error: "Failed to fetch orders" });
     }
 };
 
-module.exports = { createOrder, getOrders };
+const updateProduct = async (req, res) => {
+    try {
+        const orderID = req.params.id;
+        const updateOrder = await Order.findByIdAndUpdate(orderID, req.body, { new: true });
+        res.status(200).json({ status: "success", data: updateOrder, message: "Order Updated Successfully", });
+    } catch (err) {
+        return Error(res, 500, err.message);
+    }
+}
+
+module.exports = { createOrder, getOrders, updateProduct };

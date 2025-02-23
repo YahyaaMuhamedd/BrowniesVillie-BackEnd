@@ -12,7 +12,9 @@ const orderValidationRules = () => {
             .normalizeEmail(),
 
         body("phone")
-            .isMobilePhone().withMessage("Phone number must be a valid mobile number"),
+            .isMobilePhone().withMessage("Phone number must be a valid mobile number")
+            .isLength({ min: 10, max: 11 })
+            .withMessage("Phone number must be at least 10 digits long for home numbers and at least 11 digits long for phone numbers"),
 
         body("orderItems")
             .isArray({ min: 1 }).withMessage("Order items must be a non-empty array"),
@@ -57,6 +59,17 @@ const orderValidationRules = () => {
     ];
 };
 
+const orderValidationRulesUpdate = () => {
+
+    return [
+        body("status")
+            .optional()
+            .isString().withMessage("Status must be a string")
+            .isIn(["pending", "confirmed", "shipped", "delivered", "cancelled"])
+            .withMessage("Invalid status value")
+    ];
+}
 module.exports = {
     orderValidationRules,
+    orderValidationRulesUpdate
 };

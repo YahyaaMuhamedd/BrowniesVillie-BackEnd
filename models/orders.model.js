@@ -5,7 +5,6 @@ const orderSchema = new mongoose.Schema(
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "users",
-            required: true
         },
         name: {
             type: String,
@@ -16,7 +15,6 @@ const orderSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true,
-            lowercase: true
         },
         phone: {
             type: String,
@@ -25,7 +23,7 @@ const orderSchema = new mongoose.Schema(
         },
         orderItems: [
             {
-                productId: { type: mongoose.Schema.Types.ObjectId, ref: "Products", required: true },
+                // productId: { type: mongoose.Schema.Types.ObjectId, ref: "Products", required: true },
                 name: { type: String, required: true },
                 quantity: { type: Number, required: true, min: 1 },
                 price: { type: Number, required: true, min: 0 }
@@ -33,7 +31,7 @@ const orderSchema = new mongoose.Schema(
         ],
         paymentMethod: {
             type: String,
-            enum: ["cash", "credit_card", "paypal", "apple_pay", "google_pay"],
+            enum: ["cash", "instaPay", "vodafone cash"],
             required: true
         },
         address: {

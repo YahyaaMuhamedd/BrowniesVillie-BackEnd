@@ -1,6 +1,7 @@
 const { Error } = require("../middleware/Error");
 const UserSchema = require("../models/user.model");
 const { buildSearchQuery } = require("../middleware/SearchQuery");
+const generateToken = require("../utils/jwt");
 
 const getUsers = async (req, res) => {
     try {
@@ -11,7 +12,7 @@ const getUsers = async (req, res) => {
         const SearchQuery = buildSearchQuery(Query.search)
 
         const User = await UserSchema.find(SearchQuery, { "__v": false }).limit(limit).skip(skip)
-        res.json({ status: "success", data: { user: User } })
+        res.json({ status: "success", data: { users: User } })
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: `Faild to Login User Because ${err.message}` });
@@ -21,35 +22,37 @@ const registerUser = async (req, res) => {
     try {
         const { name, email, phone } = req.body;
 
-        const existingUser = await UserSchema.findOne({ phone });
+        const existingUser = await UserSchema.findOne({ email, phone });
         if (existingUser) {
             return Error(res, 400, "Phone Already Exists");
         }
-
         const newUser = new UserSchema({ name, email, phone });
         await newUser.save();
+        const loginUser = await UserSchema.findOne({ email, phone });
+        const token = generateToken(loginUser);
 
-        return res.json({ status: "success", data: newUser });
+        return res.json({ status: "success", message: "User Registered Successfully", data: { loginUser, token } });
     } catch (err) {
         return Error(res, 500, err.message);
     }
 };
 
-const loginUser = (req, res) => {
+const loginUser = async (req, res) => {
     try {
 
         const { email, phone } = req.body;
-        const loginUser = UserSchema.findOne({ email, phone });
+        const loginUser = await UserSchema.findOne({ email, phone });
 
 
 
         if (!loginUser) {
             return Error(res, 404, "Invalid Email or Phone Number");
         }
+        const token = generateToken(loginUser);
 
-        return res.json({ status: "success", data: loginUser });
+        return res.json({ status: "success", message: "User Logged In Successfully", data: { loginUser, token } });
     } catch (err) {
-        return Error(res, 400, err.message);
+        return Error(res, 401, err.message);
 
     }
 }

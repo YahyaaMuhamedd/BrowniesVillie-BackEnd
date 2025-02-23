@@ -22,9 +22,8 @@ app.listen(port, () => {
 })
 
 
-const uri = "mongodb+srv://YahyaMohamed:yahya123@browniesvillie.dqt0u.mongodb.net/?retryWrites=true&w=majority&appName=BrowniesVillie"
-
-mongoose.connect(uri).then(() => {
+const MongoDBURL = process.env.MONGODB_URL;
+mongoose.connect(MongoDBURL).then(() => {
     console.log('connected to mongodb');
 
 }).catch((err) => {

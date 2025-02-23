@@ -14,7 +14,7 @@ const userValidationRules = () => {
         body('phone')
             .isNumeric()
             .withMessage('phone number must be a number')
-            .isLength({ min: 10 })
+            .isLength({ min: 10, max: 11 })
             .withMessage('phone number must be at least 10 digits long'),
 
 
