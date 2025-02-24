@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("dotenv")
 const express = require("express");
 const cors = require("cors")
 const mongoose = require("mongoose");
@@ -8,7 +9,7 @@ const ordersRoute = require("./routes/orders.route");
 
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 app.use(express.json());
 app.use(cors());
