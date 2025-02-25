@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Get All Request
 router.route(`/`)
-    .get(UsersController.getUsers)
+    .get(authenticateUser, UsersController.getUsers)
 
 // Register Request
 router.route(`/register`)
