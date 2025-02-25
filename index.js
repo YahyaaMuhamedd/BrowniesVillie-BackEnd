@@ -1,5 +1,4 @@
 require("dotenv").config();
-require("dotenv")
 const express = require("express");
 const cors = require("cors")
 const mongoose = require("mongoose");
@@ -20,16 +19,18 @@ app.use("/api/orders", ordersRoute);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+
 })
 
 
 const MongoDBURL = process.env.MONGODB_URL;
-mongoose.connect(MongoDBURL).then(() => {
-    console.log('connected to mongodb');
+mongoose.connect(MongoDBURL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log('connected to mongodb');
 
-}).catch((err) => {
-    console.log(err);
-})
+    }).catch((err) => {
+        console.log(err);
+    })
 
 
 // const client = new MongoClient(uri, {
