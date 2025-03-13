@@ -13,6 +13,6 @@ router.route("/")
     .post(orderValidationRules(), validate, ordersController.createOrder);
 
 
-router.patch("/:id", orderValidationRulesUpdate(), validate, ordersController.updateProduct);
+router.patch("/:id", orderValidationRulesUpdate(), validate, ordersController.updateOrder);
 
 module.exports = router;

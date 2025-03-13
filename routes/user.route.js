@@ -1,5 +1,5 @@
 const express = require("express");
-const { userValidationRules, loginUserValidationRules } = require("../validation/user.validation");
+const { userValidationRules, loginUserValidationRules, addressValidationRules } = require("../validation/user.validation");
 const authenticateUser = require("../middleware/authenticateUser");
 const validate = require("../middleware/validate");
 const UsersController = require("../controller/users.controller");
@@ -9,6 +9,10 @@ const router = express.Router();
 router.route(`/`)
     .get(authenticateUser, UsersController.getUsers)
 
+// Get Single Request
+router.route(`/:id`)
+    .get(authenticateUser, UsersController.getUserById)
+
 // Register Request
 router.route(`/register`)
     .post(userValidationRules(), validate, UsersController.registerUser);
@@ -16,6 +20,9 @@ router.route(`/register`)
 // Login Request
 router.route(`/login`)
     .post(loginUserValidationRules(), validate, UsersController.loginUser);
+
+router.route(`/addAddress`)
+    .post(addressValidationRules(), authenticateUser, validate, UsersController.addAddress)
 
 
 router.get("/protected-route", authenticateUser, (req, res) => {

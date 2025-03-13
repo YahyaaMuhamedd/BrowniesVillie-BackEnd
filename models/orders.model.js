@@ -27,11 +27,15 @@ const orderSchema = new mongoose.Schema(
                 name: { type: String, required: true },
                 quantity: { type: Number, required: true, min: 1 },
                 price: { type: Number, required: true, min: 0 }
-            }
+            },
+
         ],
+        totalPrice: {
+            type: Number,
+        },
         paymentMethod: {
             type: String,
-            enum: ["cash", "instaPay", "vodafone cash"],
+            enum: ["cash", "instaPay", "Vodafone Cash"],
             required: true
         },
         address: {

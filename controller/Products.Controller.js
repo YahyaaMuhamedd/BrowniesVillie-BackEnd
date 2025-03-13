@@ -3,17 +3,22 @@ const ProductSchema = require("../models/product.model");
 
 const getProducts = async (req, res) => {
     try {
-        const Query = req.query; // Extract search query parameter
-        const page = Query.page || 1; // Default to page 1 if not provided
-        const limit = Query.limit || 2; // Default to 10 items per page if not provided
-        const skip = (page - 1) * 2
-        const SearchQuery = buildSearchQuery(Query.search); // Build a search query
+        const query = req.query;
+        const page = parseInt(query.page) || 1; // Default to page 1
+        const limit = parseInt(query.limit) || 10; // Default to 10 items per page
+        const skip = (page - 1) * limit;
 
-        const products = await ProductSchema.find(SearchQuery, { "__v": false }).limit(limit).skip(skip); // Fetch products from MongoDB
-        res.json({ status: "success", data: products }); // Return the fetched products as JSON
+        const searchQuery = query.search ? buildSearchQuery(query.search) : {};
+
+        const products = await ProductSchema.find({ ...searchQuery }, { "__v": false })
+            .limit(limit)
+            .skip(skip);
+
+        res.json({ status: "success", data: products });
+
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Failed to fetch products" });
+        res.status(500).json({ error: `Failed to fetch products: ${err.message}` });
     }
 };
 

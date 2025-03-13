@@ -32,7 +32,28 @@ const loginUserValidationRules = () => {
     ]
 }
 
+const addressValidationRules = () => {
+    return [
+        body('address')
+            .notEmpty()
+            .withMessage('address is required')
+            .isLength({ min: 3 })
+            .withMessage('address must be at least 3 characters long'),
+        body('floor')
+            .notEmpty()
+            .withMessage('floor is required')
+            .isNumeric()
+            .withMessage('floor must be a number'),
+        body('apartment')
+            .notEmpty()
+            .withMessage('apartment is required')
+            .isNumeric()
+            .withMessage('apartment must be a number'),
+    ]
+}
+
 module.exports = {
     userValidationRules,
-    loginUserValidationRules
+    loginUserValidationRules,
+    addressValidationRules
 }

@@ -5,19 +5,41 @@ const generateToken = require("../utils/jwt");
 
 const getUsers = async (req, res) => {
     try {
-        const Query = req.query;
-        const page = Query.page || 1
-        const limit = Query.limit || 10
-        const skip = (page - 1) * 2
-        const SearchQuery = buildSearchQuery(Query.search)
+        const query = req.query;
+        const page = parseInt(query.page) || 1; // Default to page 1
+        const limit = parseInt(query.limit) || 10; // Default to 10 items per page
+        const skip = (page - 1) * limit;
 
-        const User = await UserSchema.find(SearchQuery, { "__v": false }).limit(limit).skip(skip)
-        res.json({ status: "success", data: { users: User } })
+        const searchQuery = query.search ? buildSearchQuery(query.search) : {};
+
+        const users = await UserSchema.find({ ...searchQuery }, { "__v": false })
+            .limit(limit)
+            .skip(skip);
+
+        res.json({ status: "success", data: { users } });
+
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: `Faild to Login User Because ${err.message}` });
+        res.status(500).json({ error: `Failed to fetch users: ${err.message}` });
     }
 };
+
+const getUserById = async (req, res) => {
+    try {
+        const user = await UserSchema.findById(req.params.id, { "__v": false });
+
+        if (!user) {
+            return res.status(404).json({ ErrorMessage: 'Product not found' });
+        }
+        res.json({ status: "success", data: user });
+    } catch (error) {
+        res.status(500).json({ ErrorMessage: 'Invalid ID' });
+    }
+
+
+
+}
+
 const registerUser = async (req, res) => {
     try {
         const { name, email, phone } = req.body;
@@ -57,9 +79,43 @@ const loginUser = async (req, res) => {
     }
 }
 
+const addAddress = async (req, res) => {
+    try {
+        const { phone, address, floor, apartment, desc } = req.body;
+
+        const user = await UserSchema.findOne({ phone });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        const isAddressExists = user.addresses.some(addr =>
+            addr.address === address &&
+            addr.floor === floor &&
+            addr.apartment === apartment &&
+            addr.desc === desc
+        );
+
+        if (isAddressExists) {
+            return res.status(400).json({ message: "Address already exists." });
+        }
+
+        user.addresses.push({ address, floor, apartment, desc });
+        await user.save();
+
+        res.json({ message: "Address added successfully", user });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error adding address." });
+    }
+};
+
+
 
 module.exports = {
     getUsers,
+    getUserById,
     registerUser,
     loginUser,
+    addAddress
 };
