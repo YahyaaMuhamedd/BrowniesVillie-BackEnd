@@ -34,7 +34,6 @@ const orderValidationRules = () => {
 
         body("paymentMethod")
             .isString().withMessage("Payment method must be a string")
-            .isIn(["cash", "credit_card", "paypal", "apple_pay", "google_pay"])
             .withMessage("Invalid payment method"),
 
         body("address")
