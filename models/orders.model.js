@@ -35,7 +35,7 @@ const orderSchema = new mongoose.Schema(
         },
         paymentMethod: {
             type: String,
-            enum: ["cash", "instaPay", "Vodafone Cash"],
+            enum: ["cash", "Insta Pay", "Vodafone Cash"],
             required: true
         },
         phoneThatPaid: {
