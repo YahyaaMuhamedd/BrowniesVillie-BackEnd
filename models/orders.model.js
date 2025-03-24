@@ -38,6 +38,12 @@ const orderSchema = new mongoose.Schema(
             enum: ["cash", "instaPay", "Vodafone Cash"],
             required: true
         },
+        phoneThatPaid: {
+            type: String,
+        },
+        referenceNumber: {
+            type: String,
+        },
         address: {
             type: String,
             required: true
