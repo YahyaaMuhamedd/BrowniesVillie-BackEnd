@@ -102,7 +102,7 @@ const addAddress = async (req, res) => {
         user.addresses.push({ address, floor, apartment, desc });
         await user.save();
 
-        res.json({ message: "Address added successfully", user });
+        res.json({ status: "success", message: "Address added successfully", user });
 
     } catch (error) {
         console.error(error);
