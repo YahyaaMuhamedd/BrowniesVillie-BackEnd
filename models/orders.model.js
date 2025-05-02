@@ -39,9 +39,13 @@ const orderSchema = new mongoose.Schema(
         },
         phoneThatPaid: {
             type: String,
+            default: null,
+            trim: true
         },
         referenceNumber: {
             type: String,
+            default: null,
+            trim: true
         },
         address: {
             type: String,

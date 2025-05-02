@@ -8,11 +8,9 @@ const generateToken = require("../utils/jwt");
 // 📌 Create Order, Register/Login, and Return JWT
 const createOrder = async (req, res) => {
     try {
-        const { email, phone, name, orderItems, paymentMethod, address, floor, apartment, desc } = req.body;
+        const { email, phone, name, orderItems, paymentMethod, address, floor, apartment, desc, phoneThatPaid, referenceNumber } = req.body;
 
-        if (!email || !phone || !name || !orderItems || orderItems.length === 0) {
-            return res.status(400).json({ message: "All fields are required, and orderItems cannot be empty." });
-        }
+
 
         let user = await User.findOne({ phone });
 
@@ -50,6 +48,8 @@ const createOrder = async (req, res) => {
             orderItems,
             totalPrice,
             paymentMethod,
+            phoneThatPaid,
+            referenceNumber,
             address,
             floor,
             apartment,
@@ -63,6 +63,8 @@ const createOrder = async (req, res) => {
             orderItems,
             totalPrice,
             paymentMethod,
+            phoneThatPaid,
+            referenceNumber,
             address,
             floor,
             apartment,
